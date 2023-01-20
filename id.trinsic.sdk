@@ -1,16 +1,18 @@
 ruleset id.trinsic.sdk {
+
   meta {
     description <<
-      A rudimentary KRL sdk
+      A rudimentary KRL sdk for the Trinsic API
     >>
     configure using apiKey = ""
-    provides listCredentials, createCredential
-      , listVerifications, createVerificationFromPolicy
-      , getVerification
+    provides listCredentials, createCredential, listVerifications,
+             createVerificationFromPolicy, getVerification
   }
+
   global {
     url = "https://api.trinsic.id/credentials/v1/"
-    listCredentials = function(connectionId,state,definitionId){
+
+    listCredentials = function(connectionId, state, definitionId){
       http:get(url+"credentials",
         headers = {
           "Authorization": <<Bearer #{apiKey}>>,
@@ -23,9 +25,11 @@ ruleset id.trinsic.sdk {
         }
       )
     }
-    listVerifications = function(connectionId,policyId){
+
+    listVerifications = function(connectionId, policyId){
       http:get(url+"verifications/policy/"+policyId+"/connections/"+connectionId)
     }
+
     getVerification = function(policyId){
       http:get(url+"verifications/"+policyId,
         headers = {
@@ -34,7 +38,8 @@ ruleset id.trinsic.sdk {
           }
       )
     }
-    createCredential = defaction(definitionId,credentialValues){
+
+    createCredential = defaction(definitionId,  credentialValues){
       http:post(url+"credentials",
         headers = {
           "Authorization": <<Bearer #{apiKey}>>,
@@ -48,6 +53,7 @@ ruleset id.trinsic.sdk {
       ) setting(response)
       return response
     }
+
     createVerificationFromPolicy = defaction(policyId){
       http:put(url+"verifications/policy/"+policyId,
         headers = {
@@ -57,5 +63,6 @@ ruleset id.trinsic.sdk {
       ) setting(response)
       return response
     }
+
   }
 }
